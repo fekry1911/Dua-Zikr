@@ -44,4 +44,9 @@ class AppTextStyle {
     fontWeight: FontWeightHelper.bold,
     color: AppColors.BlackColor,
   );
-}
+  static final TextStyle font20BlackRegular= GoogleFonts.neuton(
+    fontSize: 20.sp,
+    fontWeight: FontWeightHelper.regular,
+    color: AppColors.BlackColor,
+  );
+}//Neirizi

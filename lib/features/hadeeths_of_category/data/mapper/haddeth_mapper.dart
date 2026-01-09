@@ -6,3 +6,12 @@ extension HadeethMapper on Hadith  {
     return HadeethData(id: id, title: title);
   }
 }
+extension HadeethDataMapper on HadeethData {
+  Hadith toModel() {
+    return Hadith(
+      id: id,
+      title: title,
+      translations: [], // لو عندك ترجمة ممكن تضيفها
+    );
+  }
+}

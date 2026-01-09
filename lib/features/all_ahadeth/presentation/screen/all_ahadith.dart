@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../../core/const/fake_data/catergories.dart';
 import '../../../../core/theme/text_theme/text_style.dart';
 import '../../../../core/widgets/card_cate.dart';
 import '../../../home/data/models/hadith_category.dart';
+import '../../../home/presentation/screen/widgets/all_categories.dart';
 import '../logic/all_ahadeeth_cubit.dart';
 
 class AllAhadith extends StatelessWidget {
@@ -13,18 +16,18 @@ class AllAhadith extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AllAhadeethCubit, AllAhadeethState>(
       builder: (BuildContext context, state) {
-        if (state is AllAhadeethLoading) {
-          return Center(child: CircularProgressIndicator());
-        }
         if (state is AllAhadeethError) {
           return Center(child: Text(state.message));
         }
-        List<HadithCategory> data = (state as AllAhadeethSuccess).data;
-        return ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return CateCard(data: data[index],index: index,);
-          },
-          itemCount: data.length,
+        List<HadithCategory> data = state is AllAhadeethSuccess?state.data:fakeData;
+        return Skeletonizer(
+          enabled:state is AllAhadeethLoading,
+          child: ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return CateCard(data: data[index],index: index,);
+            },
+            itemCount: data.length,
+          ),
         );
       },
     );

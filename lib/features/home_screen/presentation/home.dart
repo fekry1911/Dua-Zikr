@@ -8,31 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/di/di.dart';
-import '../../all_ahadeth/presentation/logic/all_ahadeeth_cubit.dart';
-import '../../home/presentation/logic/categories_cubit.dart';
-import '../../home/presentation/logic/get_dua_cubit.dart';
 import '../../home/presentation/screen/all_categories.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  List<Widget> pages = [
-    MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => sl<CategoriesCubit>()..getAllCategoriesData(),
-        ),
-        BlocProvider(create: (context) => sl<GetDuaCubit>()..getDuaData()),
-      ],
-      child: const AllCategories(),
-    ),
-    BlocProvider(
-      create: (context) => sl<AllAhadeethCubit>()..getAllAhadeeth(),
-      child: AllAhadith(),
-    ),
-    Favorites(),
-  ];
+  List<Widget> pages = [AllCategories(), AllAhadith(), Favorites()];
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +23,14 @@ class HomeScreen extends StatelessWidget {
 
         return Scaffold(
           extendBody: true,
-          appBar:index==0?null: AppBar(
-            title: Text(index==1?"الاحاديث":"المفضله",style: AppTextStyle.font16BlackBold,),
-          ),
+          appBar: index == 0
+              ? null
+              : AppBar(
+                  title: Text(
+                    index == 1 ? "الاحاديث" : "المفضله",
+                    style: AppTextStyle.font16BlackBold,
+                  ),
+                ),
           body: IndexedStack(index: index, children: pages),
           bottomNavigationBar: CurvedNavigationBar(
             color: Colors.white,

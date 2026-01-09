@@ -19,6 +19,7 @@ class HadithResponse {
 }
 
 @JsonSerializable()
+@JsonSerializable()
 class Hadith {
   final String id;
   final String title;
@@ -30,9 +31,16 @@ class Hadith {
     required this.translations,
   });
 
-  factory Hadith.fromJson(Map<String, dynamic> json) =>
-      _$HadithFromJson(json);
+  factory Hadith.fromJson(Map<String, dynamic> json) => Hadith(
+    id: json['id'] as String,
+    title: json['title'] as String,
+    translations: (json['translations'] as List<dynamic>?)
+        ?.map((e) => e as String)
+        .toList() ??
+        [], // لو مش موجودة خليها قائمة فاضية
+  );
 
+  Map<String, dynamic> toJson() => _$HadithToJson(this);
 }
 
 @JsonSerializable()

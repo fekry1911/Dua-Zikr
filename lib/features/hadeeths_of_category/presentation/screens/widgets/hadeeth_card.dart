@@ -1,9 +1,15 @@
+import 'package:dua_zekr/core/helpers/navigation/calm.dart';
+import 'package:dua_zekr/features/favorites/presentation/logic/manage_fav_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../core/di/di.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../../../../core/theme/text_theme/text_style.dart';
+import '../../../../hadeeth_details/presentation/logic/hadeeth_details_cubit.dart';
+import '../../../../hadeeth_details/presentation/screens/hadeeth_details.dart';
 import '../../../domain/entity/hadeeth_data.dart';
 
 class HadeethCard extends StatelessWidget {
@@ -13,13 +19,35 @@ class HadeethCard extends StatelessWidget {
   HadeethData data;
   ValueNotifier<bool> expand = ValueNotifier(false);
 
+
   @override
   Widget build(BuildContext context) {
     return Card(
           key: ValueKey(index),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+            padding: EdgeInsets.symmetric(vertical: 10.h),
             child: ListTile(
+              trailing: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    CalmPageRoute(
+                      page: MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (context) =>
+                                sl<HadeethDetailsCubit>()
+                                  ..getHadeethDetailsData(data.id),
+                          ),
+                          BlocProvider.value(value: context.read<ManageFavCubit>()),
+                        ],
+                        child: HadeethDetails(),
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.arrow_forward_ios),
+              ),
               leading: Container(
                 width: 25.w,
                 height: 25.h,
@@ -37,25 +65,21 @@ class HadeethCard extends StatelessWidget {
                       blurRadius: 5,
                     ),
                   ],
-                  color: AppColors.mainColor,
+                  color: AppColors.avatarColor,
                 ),
                 child: Center(
-                  child: InkWell(
-                    onTap: () {
-                      expand.value = !expand.value;
-                    },
-                    child: Text(
-                      (++index).toString(),
-                      style: AppTextStyle.font12GreyBold,
-                    ),
+                  child: Text(
+                    (++index).toString(),
+                    style: AppTextStyle.font12GreyBold,
                   ),
                 ),
               ),
               title: GestureDetector(
-                onTap: (){
+                onTap: () {
                   expand.value = !expand.value;
                 },
-                child: Expanded(
+                child: Hero(
+                  tag: data.id,
                   child: ValueListenableBuilder(
                     valueListenable: expand,
                     builder: (context, value, child) {
