@@ -1,4 +1,5 @@
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
+import 'package:dua_zekr/core/theme/text_theme/text_style.dart';
 import 'package:dua_zekr/features/all_ahadeth/presentation/screen/all_ahadith.dart';
 import 'package:dua_zekr/features/favorites/presentation/screen/favorites.dart';
 import 'package:dua_zekr/features/home_screen/logic/home_cubit.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/di/di.dart';
-import '../../../core/theme/colors.dart';
 import '../../all_ahadeth/presentation/logic/all_ahadeeth_cubit.dart';
 import '../../home/presentation/logic/categories_cubit.dart';
 import '../../home/presentation/logic/get_dua_cubit.dart';
@@ -16,8 +16,6 @@ import '../../home/presentation/screen/all_categories.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-
-
 
   List<Widget> pages = [
     MultiBlocProvider(
@@ -30,9 +28,9 @@ class HomeScreen extends StatelessWidget {
       child: const AllCategories(),
     ),
     BlocProvider(
-  create: (context) => sl<AllAhadeethCubit>()..getAllAhadeeth(),
-  child: AllAhadith(),
-),
+      create: (context) => sl<AllAhadeethCubit>()..getAllAhadeeth(),
+      child: AllAhadith(),
+    ),
     Favorites(),
   ];
 
@@ -44,6 +42,9 @@ class HomeScreen extends StatelessWidget {
 
         return Scaffold(
           extendBody: true,
+          appBar:index==0?null: AppBar(
+            title: Text(index==1?"الاحاديث":"المفضله",style: AppTextStyle.font16BlackBold,),
+          ),
           body: IndexedStack(index: index, children: pages),
           bottomNavigationBar: CurvedNavigationBar(
             color: Colors.white,
@@ -55,7 +56,7 @@ class HomeScreen extends StatelessWidget {
             index: index,
             height: 60.h,
             items: bottomBarItem,
-            onTap: (index){
+            onTap: (index) {
               context.read<HomeCubit>().setIndex(index);
             },
           ),

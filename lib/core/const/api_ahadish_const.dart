@@ -4,5 +4,4 @@ class ApiAhadithConst{
   static String hadeethsList="/hadeeths/list/";
   static String hadeethOne="/hadeeths/one/";
   static String allCate="/categories/list/";
-
 }

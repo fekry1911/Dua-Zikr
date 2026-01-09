@@ -56,6 +56,10 @@ class MyApp extends StatelessWidget {
             child: HomeScreen(),
           ),
           theme: ThemeData(
+            appBarTheme:  AppBarTheme(
+              elevation: 0,
+              backgroundColor: AppColors.mainColor,
+            ),
             useMaterial3: true,
             scaffoldBackgroundColor: AppColors.mainColor,
             cardTheme: CardThemeData(color: AppColors.cardColor),

@@ -18,14 +18,17 @@ class DioHadeethConfig {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           print('REQUEST[${options.method}] => PATH: ${options.path}');
+
           return handler.next(options);
         },
         onResponse: (response, handler) {
           print('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+          print('RESPONSE[${response.data}]');
           return handler.next(response);
         },
         onError: (DioError e, handler) {
           print('ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path}');
+          print('ERROR[${e.response?.data}]');
           return handler.next(e);
         },
       ),
