@@ -11,3 +11,6 @@ class NetWorkFailuer extends Failure{
 class ServerFailuer extends Failure{
   ServerFailuer(super.message);
 }
+class LocationFailure extends Failure {
+  LocationFailure(super.message);
+}

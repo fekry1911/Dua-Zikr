@@ -49,4 +49,29 @@ class AppTextStyle {
     fontWeight: FontWeightHelper.regular,
     color: AppColors.BlackColor,
   );
+  static final TextStyle font14BlackMedium= GoogleFonts.neuton(
+    fontSize: 14.sp,
+    fontWeight: FontWeightHelper.medium,
+    color: AppColors.BlackColor,
+  );
+  static final TextStyle font36BlackSemiBold= GoogleFonts.neuton(
+    fontSize: 36.sp,
+    fontWeight: FontWeightHelper.semiBold,
+    color: AppColors.BlackColor,
+  );
+  static final TextStyle font14BlackRegular= GoogleFonts.neuton(
+    fontSize: 14.sp,
+    fontWeight: FontWeightHelper.regular,
+    color: AppColors.BlackColor,
+  );
+  static final TextStyle font12BlackBold= GoogleFonts.neuton(
+    fontSize: 12.sp,
+    fontWeight: FontWeightHelper.bold,
+    color: AppColors.BlackColor,
+  );
+  static final TextStyle font12GreyRegular= GoogleFonts.neuton(
+    fontSize: 12.sp,
+    fontWeight: FontWeightHelper.regular,
+    color: AppColors.greyColor,
+  );
 }//Neirizi

@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:dua_zekr/core/di/di.dart';
 import 'package:dua_zekr/features/home_screen/logic/home_cubit.dart';
 import 'package:dua_zekr/features/home_screen/presentation/home.dart';
+import 'package:dua_zekr/features/salah_time/presentation/logic/get_prayers_time_cubit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,17 +61,15 @@ class MyApp extends StatelessWidget {
                 ),
                 BlocProvider(
                   create: (context) =>
-                  sl<AllAhadeethCubit>()
-                    ..getAllAhadeeth(),
-                ),
-                BlocProvider(
-                  create: (context) =>
                   sl<CategoriesCubit>()
                     ..getAllCategoriesData(),
                 ),
                 BlocProvider(create: (context) =>
                 sl<GetDuaCubit>()
                   ..getDuaData()),
+                BlocProvider(create: (context) =>
+                sl<GetPrayersTimeCubit>()
+                  ..getPrayerTimes()),
               ],
               child: HomeScreen(),
             ),

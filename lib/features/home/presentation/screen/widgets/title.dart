@@ -1,10 +1,13 @@
-import 'package:dua_zekr/features/home_screen/logic/home_cubit.dart';
+import 'package:dua_zekr/core/helpers/navigation/calm.dart';
+import 'package:dua_zekr/features/all_ahadeth/presentation/screen/all_ahadith.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../core/di/di.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../../../../core/theme/text_theme/text_style.dart';
+import '../../../../all_ahadeth/presentation/logic/all_ahadeeth_cubit.dart';
 
 class TitleText extends StatelessWidget {
   TitleText({super.key, required this.title});
@@ -27,12 +30,18 @@ class TitleText extends StatelessWidget {
             Spacer(),
             TextButton(
               onPressed: () {
-                context.read<HomeCubit>().setIndex(1);
+                Navigator.push(
+                  context,
+                  CalmPageRoute(
+                    page: BlocProvider(
+                      create: (context) =>
+                          sl<AllAhadeethCubit>()..getAllAhadeeth(),
+                      child: AllAhadith(),
+                    ),
+                  ),
+                );
               },
-              child: Text(
-                "عرض الكل",
-                style: AppTextStyle.font12GreyBold
-              ),
+              child: Text("عرض الكل", style: AppTextStyle.font12GreyBold),
             ),
           ],
         ),

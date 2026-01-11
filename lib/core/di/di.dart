@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dua_zekr/core/network/dio_hadeeth_config.dart';
+import 'package:dua_zekr/features/duas/data/repos_impl/get_duas_of_cate_impl.dart';
 import 'package:dua_zekr/features/favorites/data/repos/manage_favs_impl.dart';
 import 'package:dua_zekr/features/favorites/domain/use_cases/clear_favs.dart';
 import 'package:dua_zekr/features/favorites/presentation/logic/manage_fav_cubit.dart';
@@ -9,6 +10,9 @@ import 'package:dua_zekr/features/hadeeth_details/domain/repo/get_hadeeth_detail
 import 'package:dua_zekr/features/hadeeth_details/presentation/logic/hadeeth_details_cubit.dart';
 import 'package:dua_zekr/features/home/data/repo_impl/get_dua_impl.dart';
 import 'package:dua_zekr/features/home/domain/repos/get_dua.dart';
+import 'package:dua_zekr/features/salah_time/data/repos_impl/get_prayers_data_impl.dart';
+import 'package:dua_zekr/features/salah_time/doamin/repo/repos.dart';
+import 'package:dua_zekr/features/salah_time/presentation/logic/get_prayers_time_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,6 +20,9 @@ import '../../features/all_ahadeth/data/repos/get_ahadeeth_impl.dart';
 import '../../features/all_ahadeth/data/service/get_all_ahadeeth.dart';
 import '../../features/all_ahadeth/domain/get_ahadeeth_list.dart';
 import '../../features/all_ahadeth/presentation/logic/all_ahadeeth_cubit.dart';
+import '../../features/duas/data/service/get_duas_service.dart';
+import '../../features/duas/domain/repos/get_duas_cate.dart';
+import '../../features/duas/presentation/logic/all_duas_cate_cubit.dart';
 import '../../features/favorites/data/service/toggle_fav.dart';
 import '../../features/favorites/domain/repos/manage_favs.dart';
 import '../../features/favorites/domain/use_cases/get_favs.dart';
@@ -30,32 +37,51 @@ import '../../features/home/data/service/get_dua.dart';
 import '../../features/home/domain/repos/get_categories.dart';
 import '../../features/home/presentation/logic/categories_cubit.dart';
 import '../../features/home/presentation/logic/get_dua_cubit.dart';
+import '../../features/salah_time/data/service/get_prayer_times.dart';
+import '../../features/salah_time/doamin/usecases/get_prayers_time.dart';
+import '../helpers/location_service.dart';
+import '../network/dio_prayer_config.dart';
 
 GetIt sl = GetIt.instance;
 
 Future<void> setUp() async {
-  Dio dio = DioHadeethConfig.instance.dio;
   final prefs = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<Dio>(
+    () => DioHadeethConfig.instance.dio,
+    instanceName: 'hadeethDio',
+  );
 
-  sl.registerLazySingleton(() => dio);
+  sl.registerLazySingleton<Dio>(
+    () => DioPrayConfig.instance.dio,
+    instanceName: 'prayDio',
+  );
+
   sl.registerLazySingleton<GetCategoriesService>(
-    () => GetCategoriesService(sl<Dio>()),
+    () => GetCategoriesService(sl<Dio>(instanceName: 'hadeethDio')),
   );
   sl.registerSingleton<SharedPreferences>(prefs);
 
   // Services
   sl.registerLazySingleton<GetDuaService>(() => GetDuaService());
-  sl.registerLazySingleton<GetAllAhadeeeth>(() => GetAllAhadeeeth(sl<Dio>()));
+  sl.registerLazySingleton<LocationService>(() => LocationService());
+  sl.registerLazySingleton<GetAllAhadeeeth>(
+    () => GetAllAhadeeeth(sl<Dio>(instanceName: 'hadeethDio')),
+  );
   sl.registerLazySingleton<GetAhadeethsService>(
-    () => GetAhadeethsService(sl<Dio>()),
+    () => GetAhadeethsService(sl<Dio>(instanceName: 'hadeethDio')),
   );
   sl.registerLazySingleton<GetHadeethDetailsService>(
-    () => GetHadeethDetailsService(sl<Dio>()),
+    () => GetHadeethDetailsService(sl<Dio>(instanceName: 'hadeethDio')),
   );
   sl.registerSingleton<FavoritesLocalService>(
     FavoritesLocalService(sl<SharedPreferences>()),
   );
 
+  sl.registerLazySingleton<GetPrayerTimesService>(
+    () => GetPrayerTimesService(sl<Dio>(instanceName: 'prayDio')),
+  );
+
+  sl.registerSingleton<GetAllDuaService>(GetAllDuaService());
   //repos
 
   sl.registerLazySingleton<GetAllCategories>(
@@ -74,6 +100,12 @@ Future<void> setUp() async {
   sl.registerLazySingleton<ManageFavs>(
     () => ManageAllFavsImpl(sl<FavoritesLocalService>()),
   );
+  sl.registerLazySingleton<GetDuasOfCate>(
+    () => GetAllDuasOfCateImpl(sl<GetAllDuaService>()),
+  );
+  sl.registerLazySingleton<GetPrayTimesRepo>(
+    () => GetPrayersDataImpl(sl<GetPrayerTimesService>()),
+  );
 
   //use cases
   sl.registerLazySingleton<GetAllFavorites>(
@@ -84,6 +116,9 @@ Future<void> setUp() async {
   );
   sl.registerLazySingleton<ClearAllFavorites>(
     () => ClearAllFavorites(sl<ManageFavs>()),
+  );
+  sl.registerLazySingleton<GetPrayerTimesUseCase>(
+    () => GetPrayerTimesUseCase(sl<GetPrayTimesRepo>(), sl<LocationService>()),
   );
 
   //cubit
@@ -106,5 +141,13 @@ Future<void> setUp() async {
       sl<GetAllFavorites>(),
       sl<ToggleFavorite>(),
     ),
+  );
+
+  sl.registerFactory<AllDuasCateCubit>(
+    () => AllDuasCateCubit(sl<GetDuasOfCate>()),
+  );
+
+  sl.registerFactory<GetPrayersTimeCubit>(
+    () => GetPrayersTimeCubit(sl<GetPrayerTimesUseCase>()),
   );
 }

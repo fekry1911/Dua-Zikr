@@ -9,11 +9,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../home/presentation/screen/all_categories.dart';
+import '../../salah_time/presentation/screens/salah_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  List<Widget> pages = [AllCategories(), AllAhadith(), Favorites()];
+  List<Widget> pages = [AllCategories(), SalahScreen(), Favorites()];
 
   @override
   Widget build(BuildContext context) {

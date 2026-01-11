@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../core/theme/text_theme/text_style.dart';
 import '../../../../core/widgets/app_bar.dart';
+import '../../../../core/widgets/loading.dart';
 import '../../../favorites/data/models/fav_model.dart';
 import '../../../favorites/presentation/logic/manage_fav_cubit.dart';
 import '../../../hadeeths_of_category/domain/entity/hadeeth_data.dart';
@@ -61,7 +62,7 @@ class HadeethDetails extends StatelessWidget {
       body: BlocBuilder<HadeethDetailsCubit, HadeethDetailsState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return SharedLoading();
           }
 
           if (state.error != null) {
