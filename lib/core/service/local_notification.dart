@@ -7,12 +7,11 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class LocalNotificationService {
-  static final FlutterLocalNotificationsPlugin
-  flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
-  static final StreamController<NotificationResponse>
-  streamController = StreamController.broadcast();
+  static final StreamController<NotificationResponse> streamController =
+      StreamController.broadcast();
 
   static void onTap(NotificationResponse response) {
     streamController.add(response);
@@ -65,8 +64,9 @@ class LocalNotificationService {
       priority: Priority.high,
     );
 
-    final scheduledTime =
-    tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10));
+    final scheduledTime = tz.TZDateTime.now(
+      tz.local,
+    ).add(const Duration(seconds: 10));
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       2,
@@ -98,7 +98,6 @@ class LocalNotificationService {
       scheduledTime,
       const NotificationDetails(android: android),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-
     );
   }
 
@@ -106,15 +105,17 @@ class LocalNotificationService {
   static Future<void> scheduleEveryMinuteZikr() async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'every_minute_channel',
-      'Minute Zikr',
-      channelDescription: 'Reminds you to pray on the Prophet every minute',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
+          'every_minute_channel',
+          'Minute Zikr',
+          channelDescription: 'Reminds you to pray on the Prophet every minute',
+          importance: Importance.max,
+          priority: Priority.high,
+          sound: RawResourceAndroidNotificationSound('mohamed'),
+        );
 
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
 
     await flutterLocalNotificationsPlugin.periodicallyShow(
       0,
@@ -128,10 +129,15 @@ class LocalNotificationService {
 
   /// 🔹 Schedule notification 10 minutes before Salah
   static Future<void> schedulePrayerNotification(
-      int id, String title, String body, DateTime scheduledTime) async {
-        
-    final prayerTimeMinus10 = scheduledTime.subtract(const Duration(minutes: 10));
-    
+    int id,
+    String title,
+    String body,
+    DateTime scheduledTime,
+  ) async {
+    final prayerTimeMinus10 = scheduledTime.subtract(
+      const Duration(minutes: 10),
+    );
+
     // Ensure we don't schedule in the past
     if (prayerTimeMinus10.isBefore(DateTime.now())) {
       return;
@@ -139,14 +145,14 @@ class LocalNotificationService {
 
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'prayer_channel',
-      'Prayer Times',
-      channelDescription: 'Reminds you before Salah',
-      importance: Importance.max,
-      priority: Priority.high,
-      sound: RawResourceAndroidNotificationSound('adhan'),
-    );
-    
+          'prayer_channel',
+          'Prayer Times',
+          channelDescription: 'Reminds you before Salah',
+          importance: Importance.max,
+          priority: Priority.high,
+          sound: RawResourceAndroidNotificationSound('adhan'),
+        );
+
     // const DarwinNotificationDetails darwinNotificationDetails =
     //    DarwinNotificationDetails(sound: 'adhan.aiff');
 
@@ -166,19 +172,22 @@ class LocalNotificationService {
         matchDateTimeComponents: DateTimeComponents.time,
       );
     } catch (e) {
-       log('⚠️ Failed to schedule with custom sound/exact alarm: $e. Retrying with default sound & inexact mode.');
-      
+      log(
+        '⚠️ Failed to schedule with custom sound/exact alarm: $e. Retrying with default sound & inexact mode.',
+      );
+
       // Fallback: Default sound + Inexact mode
       const AndroidNotificationDetails fallbackAndroidDetails =
           AndroidNotificationDetails(
-        'prayer_channel_default',
-        'Prayer Times (Default)',
-        channelDescription: 'Reminds you before Salah (Default Sound)',
-        importance: Importance.max,
-        priority: Priority.high,
+            'prayer_channel_default',
+            'Prayer Times (Default)',
+            channelDescription: 'Reminds you before Salah (Default Sound)',
+            importance: Importance.max,
+            priority: Priority.high,
+          );
+      const NotificationDetails fallbackDetails = NotificationDetails(
+        android: fallbackAndroidDetails,
       );
-      const NotificationDetails fallbackDetails =
-          NotificationDetails(android: fallbackAndroidDetails);
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
         id,
