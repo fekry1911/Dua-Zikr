@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../home/presentation/screen/all_categories.dart';
-import '../../salah_time/presentation/screens/salah_screen.dart';
+import '../../salah_screen/presentation/screens/salah_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});

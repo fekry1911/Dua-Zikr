@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:dua_zekr/core/const/api_pray_const.dart';
 import 'package:dua_zekr/core/service/local_notification.dart';
-import 'package:dua_zekr/features/salah_time/data/models/prayer_times_response.dart';
-import 'package:dua_zekr/features/salah_time/data/service/get_prayer_times.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
+
+import '../../features/salah_screen/data/service/get_prayer_times.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {

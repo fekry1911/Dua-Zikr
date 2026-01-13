@@ -1,10 +1,11 @@
 import 'package:dua_zekr/core/theme/text_theme/text_style.dart';
-import 'package:dua_zekr/features/salah_time/presentation/logic/get_prayers_time_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+
+import '../../../../salah_screen/presentation/logic/get_prayers_time_cubit.dart';
 
 class PrayTime extends StatelessWidget {
   const PrayTime({super.key});

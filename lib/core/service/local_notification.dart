@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:dua_zekr/features/salah_time/data/models/prayer_times_response.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
+import '../../features/salah_screen/data/models/prayer_times_response.dart';
 
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -105,7 +106,7 @@ class LocalNotificationService {
   static Future<void> scheduleEveryMinuteZikr() async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-          'every_minute_channel',
+          'every_minute_channel_v2', // Changed channel ID to force update
           'Minute Zikr',
           channelDescription: 'Reminds you to pray on the Prophet every minute',
           importance: Importance.max,
@@ -117,14 +118,19 @@ class LocalNotificationService {
       android: androidNotificationDetails,
     );
 
-    await flutterLocalNotificationsPlugin.periodicallyShow(
-      0,
-      'تذكير',
-      'صلي علي النبي',
-      RepeatInterval.hourly,
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-    );
+    try {
+      await flutterLocalNotificationsPlugin.periodicallyShow(
+        0,
+        'تذكير',
+        'صلي علي النبي',
+        RepeatInterval.everyMinute,
+        notificationDetails,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      );
+      log('✅ Scheduled every minute zikr successfully');
+    } catch (e) {
+      log('❌ Error scheduling every minute zikr: $e');
+    }
   }
 
   /// 🔹 Schedule notification 10 minutes before Salah

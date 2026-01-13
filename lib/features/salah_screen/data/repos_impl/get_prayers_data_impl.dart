@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:dua_zekr/core/network/failuer.dart';
-import 'package:dua_zekr/features/salah_time/data/mapper/prayer_response_to_data.dart';
-import 'package:dua_zekr/features/salah_time/doamin/entity/prayer_data.dart';
+import 'package:dua_zekr/features/salah_screen/data/mapper/prayer_response_to_data.dart';
 
 import '../../../../core/network/error_exception.dart';
+import '../../doamin/entity/prayer_data.dart';
 import '../../doamin/repo/repos.dart';
 import '../service/get_prayer_times.dart';
 

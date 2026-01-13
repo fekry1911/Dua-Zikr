@@ -10,9 +10,6 @@ import 'package:dua_zekr/features/hadeeth_details/domain/repo/get_hadeeth_detail
 import 'package:dua_zekr/features/hadeeth_details/presentation/logic/hadeeth_details_cubit.dart';
 import 'package:dua_zekr/features/home/data/repo_impl/get_dua_impl.dart';
 import 'package:dua_zekr/features/home/domain/repos/get_dua.dart';
-import 'package:dua_zekr/features/salah_time/data/repos_impl/get_prayers_data_impl.dart';
-import 'package:dua_zekr/features/salah_time/doamin/repo/repos.dart';
-import 'package:dua_zekr/features/salah_time/presentation/logic/get_prayers_time_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,8 +34,11 @@ import '../../features/home/data/service/get_dua.dart';
 import '../../features/home/domain/repos/get_categories.dart';
 import '../../features/home/presentation/logic/categories_cubit.dart';
 import '../../features/home/presentation/logic/get_dua_cubit.dart';
-import '../../features/salah_time/data/service/get_prayer_times.dart';
-import '../../features/salah_time/doamin/usecases/get_prayers_time.dart';
+import '../../features/salah_screen/data/repos_impl/get_prayers_data_impl.dart';
+import '../../features/salah_screen/data/service/get_prayer_times.dart';
+import '../../features/salah_screen/doamin/repo/repos.dart';
+import '../../features/salah_screen/doamin/usecases/get_prayers_time.dart';
+import '../../features/salah_screen/presentation/logic/get_prayers_time_cubit.dart';
 import '../helpers/location_service.dart';
 import '../network/dio_prayer_config.dart';
 

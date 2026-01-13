@@ -1,7 +1,7 @@
 import 'package:dua_zekr/core/theme/text_theme/text_style.dart';
 import 'package:dua_zekr/core/widgets/loading.dart';
-import 'package:dua_zekr/features/salah_time/presentation/screens/widgets/clock.dart';
-import 'package:dua_zekr/features/salah_time/presentation/screens/widgets/salah_card.dart';
+import 'package:dua_zekr/features/salah_screen/presentation/screens/widgets/clock.dart';
+import 'package:dua_zekr/features/salah_screen/presentation/screens/widgets/salah_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

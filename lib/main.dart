@@ -2,7 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:dua_zekr/core/di/di.dart';
 import 'package:dua_zekr/features/home_screen/logic/home_cubit.dart';
 import 'package:dua_zekr/features/home_screen/presentation/home.dart';
-import 'package:dua_zekr/features/salah_time/presentation/logic/get_prayers_time_cubit.dart';
+import 'package:dua_zekr/features/splash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +22,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'core/service/background_service.dart';
+import 'features/salah_screen/presentation/logic/get_prayers_time_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,16 +31,16 @@ Future<void> main() async {
   await BackgroundService().initialize();
   await BackgroundService().registerPeriodicTask();
   
-  // Schedule "Every Minute" Zikr
-  await LocalNotificationService.scheduleEveryMinuteZikr();
-
   final androidPlugin =
-  LocalNotificationService.flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>();
+      LocalNotificationService.flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
 
   await androidPlugin?.requestNotificationsPermission();
   await Permission.scheduleExactAlarm.request();
+  
+  // Schedule "Every Minute" Zikr
+
   setUp();
 
   runApp(const MyApp());
@@ -75,25 +76,7 @@ class MyApp extends StatelessWidget {
                 child: DevicePreview.appBuilder(context, child),
               );
             },
-            home: MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (context) => HomeCubit(),
-                ),
-                BlocProvider(
-                  create: (context) =>
-                  sl<CategoriesCubit>()
-                    ..getAllCategoriesData(),
-                ),
-                BlocProvider(create: (context) =>
-                sl<GetDuaCubit>()
-                  ..getDuaData()),
-                BlocProvider(create: (context) =>
-                sl<GetPrayersTimeCubit>()
-                  ..getPrayerTimes()),
-              ],
-              child: HomeScreen(),
-            ),
+            home: SplashScreen(),
             theme: ThemeData(
               appBarTheme: AppBarTheme(
                 elevation: 0,
