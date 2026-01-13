@@ -6,23 +6,44 @@ import 'package:dua_zekr/features/salah_time/presentation/logic/get_prayers_time
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'core/service/local_notification.dart';
 import 'core/theme/colors.dart';
 import 'features/all_ahadeth/presentation/logic/all_ahadeeth_cubit.dart';
 import 'features/favorites/presentation/logic/manage_fav_cubit.dart';
 import 'features/home/presentation/logic/categories_cubit.dart';
 import 'features/home/presentation/logic/get_dua_cubit.dart';
 
+// ✅ استورد الاتنين بنفس الاسم
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+import 'core/service/background_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await setUp();
-  runApp(
-    DevicePreview(enabled: !kReleaseMode, builder: (context) => const MyApp()),
-  );
-}
 
+  await LocalNotificationService.init();
+  await BackgroundService().initialize();
+  await BackgroundService().registerPeriodicTask();
+  
+  // Schedule "Every Minute" Zikr
+  await LocalNotificationService.scheduleEveryMinuteZikr();
+
+  final androidPlugin =
+  LocalNotificationService.flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>();
+
+  await androidPlugin?.requestNotificationsPermission();
+  await Permission.scheduleExactAlarm.request();
+  setUp();
+
+  runApp(const MyApp());
+}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override

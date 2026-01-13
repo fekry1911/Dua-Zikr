@@ -59,7 +59,23 @@ class PrayTime extends StatelessWidget {
                                 }
 
                                 if (state.error != null) {
-                                  return Text(state.error!);
+                                  return Center(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(state.error!),
+                                        TextButton(
+                                          onPressed: () {
+                                            context
+                                                .read<GetPrayersTimeCubit>()
+                                                .getPrayerTimes();
+                                          },
+                                          child: Text("try again"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 }
 
                                 if (state.data == null) {
@@ -69,7 +85,6 @@ class PrayTime extends StatelessWidget {
                                 final nextPrayer = state.nextPrayer ?? '';
                                 final nextPrayerTime = state.nextPrayerTime;
                                 final nowPrayerTime = state.currentPrayerTime;
-
 
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

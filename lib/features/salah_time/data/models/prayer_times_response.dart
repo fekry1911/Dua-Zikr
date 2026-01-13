@@ -81,6 +81,21 @@ class Timings {
       _$TimingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$TimingsToJson(this);
+  Map<String, String> toMap() {
+    return {
+      'Fajr': fajr,
+      'Sunrise': sunrise,
+      'Dhuhr': dhuhr,
+      'Asr': asr,
+      'Sunset': sunset,
+      'Maghrib': maghrib,
+      'Isha': isha,
+      'Imsak': imsak,
+      'Midnight': midnight,
+      'Firstthird': firstthird,
+      'Lastthird': lastthird,
+    };
+  }
 }
 
 @JsonSerializable()

@@ -17,9 +17,12 @@ class Favorites extends StatelessWidget {
         if (state.error != null) {
           return Center(child: Text(state.error!));
         }
-        List<HadeethData> favorites = state.favorites.isEmpty
+        List<HadeethData> favorites = state.isLoading
             ? fakeHadeethsData
             : state.favorites;
+        if (favorites.isEmpty) {
+          return Center(child: Text("لا يوجد عناصر ف المفضله"),);
+        }
         return Skeletonizer(
           enabled: state.isLoading,
           child: ListView.builder(

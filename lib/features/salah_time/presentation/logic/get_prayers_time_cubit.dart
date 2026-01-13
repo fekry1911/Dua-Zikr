@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../../../../core/service/alarm.dart';
+import '../../../../core/service/local_notification.dart';
 import '../../data/models/prayer_times_response.dart';
 import '../../doamin/entity/prayer_data.dart';
 import '../../doamin/usecases/get_prayers_time.dart';
@@ -25,19 +27,28 @@ class GetPrayersTimeCubit extends Cubit<GetPrayersTimeState> {
           error: failure.message,
         ));
       },
-          (data) {
-        final info = _calculatePrayers(data.timings);
+            (data) async {
+          final info = _calculatePrayers(data.timings);
 
-        emit(state.copyWith(
-          isLoading: false,
-          data: data,
-          currentPrayer: info.currentPrayer,
-          nextPrayer: info.nextPrayer,
-          currentPrayerTime: info.currentPrayerTime,
-          nextPrayerTime: info.nextPrayerTime,
-          remainingTime: info.remainingTime,
-        ));
-      },
+          final timingsMap = {
+            'Fajr': data.timings.fajr,
+            'Dhuhr': data.timings.dhuhr,
+            'Asr': data.timings.asr,
+            'Maghrib': data.timings.maghrib,
+            'Isha': data.timings.isha,
+          };
+          // Schedule notifications for the fetched prayer times
+          await LocalNotificationService.scheduleAllPrayers(data.timings);
+          emit(state.copyWith(
+            isLoading: false,
+            data: data,
+            currentPrayer: info.currentPrayer,
+            nextPrayer: info.nextPrayer,
+            currentPrayerTime: info.currentPrayerTime,
+            nextPrayerTime: info.nextPrayerTime,
+            remainingTime: info.remainingTime,
+          ));
+        }
     );
   }
 
@@ -93,10 +104,6 @@ class GetPrayersTimeCubit extends Cubit<GetPrayersTimeState> {
     );
   }
 }
-
-
-
-
 
 class PrayerInfo {
   final String currentPrayer;

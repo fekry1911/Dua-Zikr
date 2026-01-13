@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationService {
   Future<Position> getCurrentLocation() async {
@@ -16,8 +17,19 @@ class LocationService {
       throw Exception('Location permission denied forever');
     }
 
-    return await Geolocator.getCurrentPosition(
+    final position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+    
+    // Cache location for background service
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setDouble('cached_lat', position.latitude);
+      await prefs.setDouble('cached_lng', position.longitude);
+    } catch (e) {
+      // Ignore caching errors
+    }
+
+    return position;
   }
 }

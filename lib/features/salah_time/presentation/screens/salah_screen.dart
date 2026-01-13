@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/service/local_notification.dart';
 import '../logic/get_prayers_time_cubit.dart';
 
 class SalahScreen extends StatelessWidget {
@@ -24,7 +25,21 @@ class SalahScreen extends StatelessWidget {
         if (state.isLoading) {
           return const Center(child: SharedLoading());
         }
-
+        if (state.error != null) {
+          return Center(
+            child: Column(
+              children: [
+                Text(state.error!),
+                TextButton(
+                  onPressed: () {
+                    context.read<GetPrayersTimeCubit>().getPrayerTimes();
+                  },
+                  child: Text("try again"),
+                ),
+              ],
+            ),
+          );
+        }
         if (state.data == null) {
           return const SizedBox();
         }
@@ -35,7 +50,11 @@ class SalahScreen extends StatelessWidget {
           PrayerItem(name: 'الفجر', time: timings.fajr, icon: Icons.nightlight),
           PrayerItem(name: 'الظهر', time: timings.dhuhr, icon: Icons.wb_sunny),
           PrayerItem(name: 'العصر', time: timings.asr, icon: Icons.cloud),
-          PrayerItem(name: 'المغرب', time: timings.maghrib, icon: Icons.wb_sunny_outlined),
+          PrayerItem(
+            name: 'المغرب',
+            time: timings.maghrib,
+            icon: Icons.wb_sunny_outlined,
+          ),
           PrayerItem(name: 'العشاء', time: timings.isha, icon: Icons.dark_mode),
         ];
 
@@ -47,16 +66,16 @@ class SalahScreen extends StatelessWidget {
               children: [
                 Text(
                   "${state.data!.dateInfo.gregorian.day} "
-                      "${state.data!.dateInfo.gregorian.month.en} "
-                      "${state.data!.dateInfo.gregorian.year}",
+                  "${state.data!.dateInfo.gregorian.month.en} "
+                  "${state.data!.dateInfo.gregorian.year}",
                   style: AppTextStyle.font12GreyRegular,
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   "${state.data!.dateInfo.hijri.day} "
-                      "${state.data!.dateInfo.hijri.weekday.ar} "
-                      "${state.data!.dateInfo.hijri.month.ar} "
-                      "${state.data!.dateInfo.hijri.year}",
+                  "${state.data!.dateInfo.hijri.weekday.ar} "
+                  "${state.data!.dateInfo.hijri.month.ar} "
+                  "${state.data!.dateInfo.hijri.year}",
                   style: AppTextStyle.font14BlackBold,
                 ),
               ],
@@ -72,7 +91,12 @@ class SalahScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("الوقت المتبقي لصلاة "),
+                  GestureDetector(
+                      onTap: () async {
+                       // await LocalNotificationService.showDhikrNowNotification(DateTime.now().second);
+                        LocalNotificationService.showRepeatedNotification();
+                      },
+                      child: Text("الوقت المتبقي لصلاة ")),
                   Text(
                     state.nextPrayer ?? "",
                     style: AppTextStyle.font14BlackBold,
